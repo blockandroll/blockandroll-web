@@ -18,3 +18,9 @@ test('classes page renders heading without error', async ({ page }) => {
   await expect(page.getByRole('heading', { name: /our classes/i })).toBeVisible()
   await expect(page.locator('body')).not.toContainText('Error loading classes')
 })
+
+test('news page renders heading without error', async ({ page }) => {
+  await page.goto('/news')
+  await expect(page.getByRole('heading', { name: /^news$/i })).toBeVisible()
+  await expect(page.locator('body')).not.toContainText('Error loading news')
+})
