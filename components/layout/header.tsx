@@ -67,9 +67,9 @@ export function Header() {
     .slice(0, 2) ?? '?'
 
   return (
-    <header className="border-b bg-white">
+    <header className="border-b bg-[#0F0A1A] border-[#2D1060]">
       <div className="mx-auto max-w-6xl flex h-16 items-center justify-between px-4">
-        <Link href="/" className="font-bold text-xl tracking-tight">
+        <Link href="/" className="font-bold text-xl tracking-tight text-white">
           Block & Roll
         </Link>
 
@@ -78,8 +78,8 @@ export function Header() {
             <Link
               key={href}
               href={href}
-              className={`text-sm font-medium transition-colors hover:text-primary ${
-                pathname.startsWith(href) ? 'text-primary' : 'text-muted-foreground'
+              className={`text-sm font-medium transition-colors ${
+                pathname.startsWith(href) ? 'text-orange-500' : 'text-slate-400 hover:text-white'
               }`}
             >
               {label}

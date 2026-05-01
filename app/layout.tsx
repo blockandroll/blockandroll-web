@@ -1,14 +1,19 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, Anton } from 'next/font/google'
 import './globals.css'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 
 const inter = Inter({ subsets: ['latin'] })
+const anton = Anton({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-anton',
+})
 
 export const metadata: Metadata = {
-  title: 'Block & Roll — Beach Volleyball',
-  description: 'Beach volleyball classes and community',
+  title: 'Block N\' Roll — Beach Volleyball Club',
+  description: 'Beach volleyball classes for all levels in Barcelona.',
 }
 
 export default function RootLayout({
@@ -18,7 +23,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} min-h-screen flex flex-col bg-slate-50`}>
+      <body className={`${inter.className} ${anton.variable} min-h-screen flex flex-col bg-slate-50`}>
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

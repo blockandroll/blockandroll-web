@@ -6,9 +6,9 @@ export default function HomePage() {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-gradient-to-b from-slate-900 to-slate-700 text-white py-24 px-4">
+      <section className="bg-gradient-to-b from-[#1E0A3C] to-[#0F0F0F] text-white py-24 px-4">
         <div className="mx-auto max-w-3xl text-center">
-          <h1 className="text-5xl font-bold mb-4">Block &amp; Roll</h1>
+          <h1 className="font-display text-5xl font-bold mb-4 uppercase tracking-wide">Block &amp; Roll</h1>
           <p className="text-xl text-slate-300 mb-8">
             Beach volleyball classes for all levels in Barcelona.
             Join our community and take your game to the next level.
@@ -17,7 +17,7 @@ export default function HomePage() {
             <Button asChild size="lg">
               <Link href="/classes">View Classes</Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="text-white border-white hover:bg-white hover:text-slate-900">
+            <Button asChild size="lg" variant="outline" className="text-white border-white hover:bg-[#7C3AED] hover:border-[#7C3AED] hover:text-white">
               <Link href="/login">Get Started</Link>
             </Button>
           </div>
@@ -27,7 +27,7 @@ export default function HomePage() {
       {/* Features */}
       <section className="py-16 px-4">
         <div className="mx-auto max-w-6xl">
-          <h2 className="text-3xl font-bold text-center mb-12">Why Join Us?</h2>
+          <h2 className="font-display text-3xl font-bold text-center mb-12 uppercase">Why Join Us?</h2>
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
@@ -59,7 +59,7 @@ export default function HomePage() {
       {/* CTA */}
       <section className="bg-slate-100 py-16 px-4">
         <div className="mx-auto max-w-xl text-center">
-          <h2 className="text-2xl font-bold mb-4">Ready to play?</h2>
+          <h2 className="font-display text-2xl font-bold mb-4 uppercase">Ready to play?</h2>
           <p className="text-muted-foreground mb-6">
             Browse our upcoming classes and sign up today.
           </p>

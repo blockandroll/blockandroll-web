@@ -43,11 +43,19 @@ const config: Config = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
+        brand: {
+          orange: '#F97316',
+          purple: '#7C3AED',
+          dark: '#1E0A3C',
+        },
       },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
+      },
+      fontFamily: {
+        display: ['var(--font-anton)', 'sans-serif'],
       },
       keyframes: {
         'accordion-down': {
