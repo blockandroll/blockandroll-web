@@ -43,7 +43,7 @@ export default async function NewsPostPage({ params }: { params: Promise<{ id: s
 
       {post.content && (
         <div className="space-y-4">
-          {post.content.split('\n').map((paragraph, i) => (
+          {post.content.split('\n').map((paragraph: string, i: number) => (
             <p key={i} className="text-muted-foreground">{paragraph}</p>
           ))}
         </div>
