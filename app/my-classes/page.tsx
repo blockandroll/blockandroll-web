@@ -86,14 +86,16 @@ export default async function MyClassesPage() {
             {notes.map((note) => {
               const cls = Array.isArray(note.class) ? note.class[0] : note.class
               const coach = Array.isArray(note.coach) ? note.coach[0] : note.coach
+              const coachName = coach && typeof coach === 'object' && 'full_name' in coach ? (coach as { full_name: string }).full_name : null
+              const className = cls && typeof cls === 'object' && 'title' in cls ? (cls as { title: string }).title : null
               return (
                 <Card key={note.id} className="border-l-4 border-l-primary">
                   <CardContent className="pt-4">
                     <p className="text-sm mb-3">{note.content}</p>
                     <div className="flex items-center justify-between text-xs text-muted-foreground">
                       <span>
-                        {coach && !Array.isArray(coach) ? `Coach: ${(coach as { full_name: string }).full_name}` : ''}
-                        {cls && !Array.isArray(cls) ? ` · ${(cls as { title: string }).title}` : ''}
+                        {coachName && `Coach: ${coachName}`}
+                        {className && ` · ${className}`}
                       </span>
                       <span>{new Date(note.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
                     </div>
