@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -14,7 +14,7 @@ export default async function AdminPlayerDetailPage({ params }: { params: Promis
   const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) notFound()
+  if (!user) redirect('/login')
 
   const [{ data: player }, { data: notes }, { data: enrollments }] = await Promise.all([
     supabase.from('profiles').select('id, full_name, role, phone, bio, created_at').eq('id', id).single(),

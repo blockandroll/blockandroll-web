@@ -37,6 +37,8 @@ export default async function AdminNewsPage() {
   async function togglePublish(formData: FormData) {
     'use server'
     const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
     const id = formData.get('id') as string
     const current = formData.get('current') === 'true'
     await supabase.from('news_posts').update({
