@@ -70,7 +70,7 @@ export function Header() {
     <header className="border-b bg-white">
       <div className="mx-auto max-w-6xl flex h-16 items-center justify-between px-4">
         <Link href="/" className="font-bold text-xl tracking-tight">
-          Block &amp; Roll
+          Block & Roll
         </Link>
 
         <nav className="hidden md:flex items-center gap-6">
@@ -90,33 +90,25 @@ export function Header() {
         <div>
           {user ? (
             <DropdownMenu>
-              <DropdownMenuTrigger
-                render={
-                  <button className="relative inline-flex h-9 w-9 items-center justify-center rounded-full bg-transparent hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" />
-                }
-              >
-                <Avatar className="h-9 w-9">
-                  <AvatarFallback>{initials}</AvatarFallback>
-                </Avatar>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-9 w-9 rounded-full">
+                  <Avatar className="h-9 w-9">
+                    <AvatarFallback>{initials}</AvatarFallback>
+                  </Avatar>
+                </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem
-                  render={<Link href="/dashboard" />}
-                >
-                  Dashboard
+                <DropdownMenuItem asChild>
+                  <Link href="/dashboard">Dashboard</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  render={<Link href="/profile" />}
-                >
-                  My Profile
+                <DropdownMenuItem asChild>
+                  <Link href="/profile">My Profile</Link>
                 </DropdownMenuItem>
                 {(profile?.role === 'admin' || profile?.role === 'coach') && (
                   <>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      render={<Link href="/admin" />}
-                    >
-                      Admin Panel
+                    <DropdownMenuItem asChild>
+                      <Link href="/admin">Admin Panel</Link>
                     </DropdownMenuItem>
                   </>
                 )}
@@ -127,11 +119,8 @@ export function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button
-              size="sm"
-              render={<Link href="/login" />}
-            >
-              Log in
+            <Button asChild size="sm">
+              <Link href="/login">Log in</Link>
             </Button>
           )}
         </div>
