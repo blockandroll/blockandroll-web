@@ -22,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className="scroll-smooth">
       <body className={`${inter.className} ${anton.variable} min-h-screen flex flex-col bg-slate-50`}>
         <Header />
         <main className="flex-1">{children}</main>
