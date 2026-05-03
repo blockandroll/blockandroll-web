@@ -1,16 +1,27 @@
+import { headers } from 'next/headers'
 import { Button } from '@/components/ui/button'
+import { detectLang, t } from '@/lib/i18n'
+import type { Lang } from '@/lib/i18n'
 
-// ─── In-page anchor nav ───────────────────────────────────────────────────────
-const NAV_LINKS = [
-  { label: 'About', href: '#about' },
-  { label: 'Offer', href: '#offer' },
-  { label: 'Schedules', href: '#schedules' },
-  { label: 'Prices', href: '#prices' },
-  { label: 'Location', href: '#location' },
-  { label: 'Contact', href: '#contact' },
-]
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ lang?: string }>
+}) {
+  const params = await searchParams
+  const headersList = await headers()
+  const lang: Lang = detectLang(headersList.get('accept-language'), params.lang)
+  const tr = t(lang)
 
-export default function HomePage() {
+  const navLinks = [
+    { label: tr.nav.about, href: '#about' },
+    { label: tr.nav.offer, href: '#offer' },
+    { label: tr.nav.schedules, href: '#schedules' },
+    { label: tr.nav.prices, href: '#prices' },
+    { label: tr.nav.location, href: '#location' },
+    { label: tr.nav.contact, href: '#contact' },
+  ]
+
   return (
     <div className="w-full">
 
@@ -39,7 +50,7 @@ export default function HomePage() {
 
         {/* In-page anchor nav — hidden on mobile, horizontal on md+ */}
         <nav className="hidden md:flex justify-center gap-6 mb-14">
-          {NAV_LINKS.map(({ label, href }) => (
+          {navLinks.map(({ label, href }) => (
             <a
               key={href}
               href={href}
@@ -51,17 +62,34 @@ export default function HomePage() {
         </nav>
 
         <div className="relative mx-auto max-w-4xl text-center">
+          {/* Language switcher */}
+          <div className="flex items-center gap-2 justify-end mb-6">
+            {(['es', 'en', 'ca'] as const).map((l) => (
+              <a
+                key={l}
+                href={`/?lang=${l}`}
+                className={`px-3 py-1 rounded-full text-xs font-semibold uppercase transition-colors ${
+                  lang === l
+                    ? 'bg-orange-500 text-white'
+                    : 'bg-white/10 text-white/70 hover:bg-white/20 hover:text-white'
+                }`}
+              >
+                {l}
+              </a>
+            ))}
+          </div>
+
           {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-1.5 text-sm font-medium text-white/80 mb-8">
-            🏐 <span>Free trial session · No commitment</span>
+            <span>{tr.hero.badge}</span>
           </div>
 
           <h1 className="font-display text-5xl sm:text-6xl md:text-7xl uppercase tracking-wide leading-tight mb-6">
-            Train beach volleyball<br className="hidden sm:block" /> in Barcelona<br className="hidden sm:block" /> and improve while having fun
+            {tr.hero.headline}
           </h1>
 
           <p className="text-lg md:text-xl text-white/70 mb-10 max-w-2xl mx-auto">
-            For all levels · Small groups · Certified coaches · Great community
+            {tr.hero.subheadline}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -70,7 +98,7 @@ export default function HomePage() {
               size="lg"
               className="bg-[#F97316] hover:bg-[#ea6c0c] text-white font-bold text-base px-8 py-6 rounded-xl shadow-lg shadow-[#F97316]/30"
             >
-              <a href="#contact">Join a training session</a>
+              <a href="#contact">{tr.hero.ctaPrimary}</a>
             </Button>
             <Button
               asChild
@@ -78,7 +106,7 @@ export default function HomePage() {
               variant="outline"
               className="border-[#7C3AED] text-[#7C3AED] hover:bg-[#7C3AED] hover:text-white font-bold text-base px-8 py-6 rounded-xl bg-transparent"
             >
-              <a href="#schedules">See schedules</a>
+              <a href="#schedules">{tr.hero.ctaSecondary}</a>
             </Button>
           </div>
         </div>
@@ -90,28 +118,21 @@ export default function HomePage() {
       <section id="about" className="bg-[#FFFBF0] py-16 md:py-24 px-4">
         <div className="mx-auto max-w-6xl">
           <h2 className="font-display text-4xl md:text-5xl uppercase text-center mb-4">
-            Who are we?
+            {tr.about.title}
           </h2>
           <div className="w-16 h-1 bg-[#F97316] mx-auto mb-10 rounded-full" />
 
           <p className="text-center text-lg text-slate-600 max-w-3xl mx-auto mb-14">
-            Sara, Jesús and David — passionate about beach volleyball and rock 🤘. After years
-            training and competing, they created Block N&apos; Roll: a space to learn, improve,
-            enjoy and build a true community. Dynamic and intensive training, adapted to each
-            person, in a fun and welcoming environment.
+            {tr.about.description}
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            {[
-              { name: 'Sara', role: 'Co-Founder', emoji: '🏐' },
-              { name: 'Jesús García', role: 'Co-Founder & Head Coach', emoji: '🏐' },
-              { name: 'David Bardina', role: 'Co-Founder & Coach', emoji: '🏐' },
-            ].map(({ name, role, emoji }) => (
+            {tr.about.founders.map(({ name, role }) => (
               <div
                 key={name}
                 className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow p-8 text-center"
               >
-                <div className="text-5xl mb-4">{emoji}</div>
+                <div className="text-5xl mb-4">🏐</div>
                 <h3 className="font-bold text-lg text-slate-900">{name}</h3>
                 <p className="text-sm text-slate-500 mt-1">{role}</p>
               </div>
@@ -126,46 +147,25 @@ export default function HomePage() {
       <section id="for-who" className="bg-white py-16 md:py-24 px-4">
         <div className="mx-auto max-w-6xl">
           <h2 className="font-display text-4xl md:text-5xl uppercase text-center mb-4">
-            Who is it for?
+            {tr.forWho.title}
           </h2>
           <div className="w-16 h-1 bg-[#F97316] mx-auto mb-10 rounded-full" />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-            {[
-              {
-                icon: '🌱',
-                title: 'Complete beginners',
-                desc: 'Never touched a volleyball? Perfect starting point.',
-              },
-              {
-                icon: '📈',
-                title: 'Basic level',
-                desc: 'You know the basics and want to build a solid foundation.',
-              },
-              {
-                icon: '🔥',
-                title: 'Intermediate',
-                desc: 'You compete or want to take your game to the next level.',
-              },
-              {
-                icon: '👥',
-                title: 'Social players',
-                desc: 'Looking to meet people and enjoy sport with good vibes.',
-              },
-            ].map(({ icon, title, desc }) => (
+            {tr.forWho.cards.map(({ icon, title, description }) => (
               <div
                 key={title}
                 className="rounded-2xl border border-slate-100 bg-slate-50 shadow-sm hover:shadow-md transition-shadow p-6 text-center"
               >
                 <div className="text-4xl mb-3">{icon}</div>
                 <h3 className="font-bold text-slate-900 mb-2">{title}</h3>
-                <p className="text-sm text-slate-500">{desc}</p>
+                <p className="text-sm text-slate-500">{description}</p>
               </div>
             ))}
           </div>
 
           <p className="text-center text-slate-500 italic">
-            Train solo, with a partner, or bring your whole group.
+            {tr.forWho.note}
           </p>
         </div>
       </section>
@@ -176,26 +176,19 @@ export default function HomePage() {
       <section id="offer" className="bg-[#FFFBF0] py-16 md:py-24 px-4">
         <div className="mx-auto max-w-6xl">
           <h2 className="font-display text-4xl md:text-5xl uppercase text-center mb-4">
-            What we offer
+            {tr.offer.title}
           </h2>
           <div className="w-16 h-1 bg-[#F97316] mx-auto mb-10 rounded-full" />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              { icon: '🎯', title: 'Complete, personalised training', desc: 'Every session tailored to your level and goals.' },
-              { icon: '👥', title: 'Small groups', desc: 'Max 8 players per court — more touches, more feedback.' },
-              { icon: '⏱️', title: '90-minute sessions', desc: 'With certified coaches who track your progress.' },
-              { icon: '🆓', title: 'Free trial session', desc: 'Come once on us — zero commitment required.' },
-              { icon: '🤝', title: 'Private & custom sessions', desc: 'One-on-one or group sessions available on request.' },
-              { icon: '🤘', title: 'Active community', desc: 'Great atmosphere — we play hard and laugh harder.' },
-            ].map(({ icon, title, desc }) => (
+            {tr.offer.features.map(({ icon, title, description }) => (
               <div
                 key={title}
                 className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow p-7"
               >
                 <div className="text-3xl mb-3">{icon}</div>
                 <h3 className="font-bold text-slate-900 mb-1">{title}</h3>
-                <p className="text-sm text-slate-500">{desc}</p>
+                <p className="text-sm text-slate-500">{description}</p>
               </div>
             ))}
           </div>
@@ -208,42 +201,25 @@ export default function HomePage() {
       <section id="methodology" className="bg-white py-16 md:py-24 px-4">
         <div className="mx-auto max-w-6xl">
           <h2 className="font-display text-4xl md:text-5xl uppercase text-center mb-4">
-            Our training approach
+            {tr.methodology.title}
           </h2>
           <div className="w-16 h-1 bg-[#F97316] mx-auto mb-10 rounded-full" />
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-            {[
-              {
-                icon: '💪',
-                title: 'Physical',
-                desc: 'Resistance, speed, coordination and specific strength for beach volleyball.',
-              },
-              {
-                icon: '🏐',
-                title: 'Technical',
-                desc: 'Ball control, precision and mastering the key technical gestures.',
-              },
-              {
-                icon: '🧠',
-                title: 'Tactical',
-                desc: 'Reading the game, smart decision-making and positioning on court.',
-              },
-            ].map(({ icon, title, desc }) => (
+            {tr.methodology.pillars.map(({ icon, title, description }) => (
               <div
                 key={title}
                 className="rounded-2xl border-t-4 border-[#F97316] bg-slate-50 shadow-sm hover:shadow-md transition-shadow p-8 text-center"
               >
                 <div className="text-4xl mb-4">{icon}</div>
                 <h3 className="font-display text-2xl uppercase mb-3">{title}</h3>
-                <p className="text-slate-500 text-sm">{desc}</p>
+                <p className="text-slate-500 text-sm">{description}</p>
               </div>
             ))}
           </div>
 
           <p className="text-center text-slate-600 max-w-2xl mx-auto">
-            We design dynamic sessions to maximise repetitions and real game situations. Each
-            exercise is adapted to your level so you progress from your starting point.
+            {tr.methodology.description}
           </p>
         </div>
       </section>
@@ -254,7 +230,7 @@ export default function HomePage() {
       <section id="schedules" className="bg-[#F0F9FF] py-16 md:py-24 px-4">
         <div className="mx-auto max-w-6xl">
           <h2 className="font-display text-4xl md:text-5xl uppercase text-center mb-4">
-            Schedules
+            {tr.schedules.title}
           </h2>
           <div className="w-16 h-1 bg-[#F97316] mx-auto mb-10 rounded-full" />
 
@@ -289,7 +265,8 @@ export default function HomePage() {
           </div>
 
           <p className="text-center text-slate-500 mb-8">
-            90-minute sessions · Specific times published on{' '}
+            {tr.schedules.duration} ·{' '}
+            {tr.schedules.instagram}{' '}
             <a
               href="https://www.instagram.com/blocknrollbeachvolleybcn"
               target="_blank"
@@ -303,9 +280,8 @@ export default function HomePage() {
           {/* Summer callout */}
           <div className="border-2 border-[#F97316] rounded-2xl bg-white p-6 max-w-2xl mx-auto mb-10">
             <p className="text-slate-700 text-sm leading-relaxed">
-              ⚠️{' '}
-              <span className="font-semibold">Summer training available May–July 2025</span> with
-              limited morning and afternoon slots — message us to find out more.
+              <span className="font-semibold">{tr.schedules.summerTitle}</span>{' '}
+              {tr.schedules.summerText}
             </p>
           </div>
 
@@ -315,7 +291,7 @@ export default function HomePage() {
               size="lg"
               className="bg-[#F97316] hover:bg-[#ea6c0c] text-white font-bold px-8 py-6 rounded-xl shadow-lg shadow-[#F97316]/30"
             >
-              <a href="#contact">Ask for available spots</a>
+              <a href="#contact">{tr.schedules.ctaButton}</a>
             </Button>
           </div>
         </div>
@@ -327,44 +303,36 @@ export default function HomePage() {
       <section id="prices" className="bg-white py-16 md:py-24 px-4">
         <div className="mx-auto max-w-6xl">
           <h2 className="font-display text-4xl md:text-5xl uppercase text-center mb-4">
-            Prices
+            {tr.prices.title}
           </h2>
           <div className="w-16 h-1 bg-[#F97316] mx-auto mb-10 rounded-full" />
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-            {/* 1 day/week */}
-            <div className="rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow p-8 text-center">
-              <h3 className="font-display text-2xl uppercase mb-2">1 day/week</h3>
-              <div className="text-4xl font-black text-slate-900 mb-1">€35</div>
-              <div className="text-sm text-slate-400 mb-4">per month</div>
-              <p className="text-slate-500 text-sm">Perfect to start</p>
-            </div>
-
-            {/* 2 days/week — featured */}
-            <div className="relative rounded-2xl border-2 border-[#F97316] shadow-md hover:shadow-lg transition-shadow p-8 text-center">
-              <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#F97316] text-white text-xs font-bold px-4 py-1 rounded-full uppercase tracking-wider">
-                Most popular
-              </span>
-              <h3 className="font-display text-2xl uppercase mb-2 mt-2">2 days/week</h3>
-              <div className="text-4xl font-black text-slate-900 mb-1">€65</div>
-              <div className="text-sm text-slate-400 mb-4">per month</div>
-              <p className="text-slate-500 text-sm">Best value for progress</p>
-            </div>
-
-            {/* Small group */}
-            <div className="rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow p-8 text-center">
-              <h3 className="font-display text-2xl uppercase mb-2">Small group</h3>
-              <div className="text-4xl font-black text-slate-900 mb-1">—</div>
-              <div className="text-sm text-slate-400 mb-4">price varies</div>
-              <p className="text-slate-500 text-sm">Contact us for custom groups</p>
-            </div>
+            {tr.prices.plans.map(({ name, price, period, tag, description }) => (
+              <div
+                key={name}
+                className={`relative rounded-2xl shadow-sm hover:shadow-md transition-shadow p-8 text-center ${
+                  tag
+                    ? 'border-2 border-[#F97316] shadow-md hover:shadow-lg'
+                    : 'border border-slate-200'
+                }`}
+              >
+                {tag && (
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#F97316] text-white text-xs font-bold px-4 py-1 rounded-full uppercase tracking-wider">
+                    {tag}
+                  </span>
+                )}
+                <h3 className={`font-display text-2xl uppercase mb-2 ${tag ? 'mt-2' : ''}`}>{name}</h3>
+                <div className="text-4xl font-black text-slate-900 mb-1">{price}</div>
+                <div className="text-sm text-slate-400 mb-4">{period}</div>
+                <p className="text-slate-500 text-sm">{description}</p>
+              </div>
+            ))}
           </div>
 
           <div className="bg-slate-50 rounded-2xl border border-slate-100 p-6 max-w-2xl mx-auto text-center">
             <p className="text-slate-600 text-sm leading-relaxed">
-              🛡️ <span className="font-semibold">Federation license required</span> (includes
-              sports insurance): <span className="font-bold text-slate-900">€35/year</span>. We
-              can handle the paperwork for you at no extra cost.
+              {tr.prices.federationNote}
             </p>
           </div>
         </div>
@@ -376,7 +344,7 @@ export default function HomePage() {
       <section id="location" className="bg-[#FFFBF0] py-16 md:py-24 px-4">
         <div className="mx-auto max-w-6xl">
           <h2 className="font-display text-4xl md:text-5xl uppercase text-center mb-4">
-            Where we train
+            {tr.location.title}
           </h2>
           <div className="w-16 h-1 bg-[#F97316] mx-auto mb-10 rounded-full" />
 
@@ -384,30 +352,27 @@ export default function HomePage() {
             {/* Info */}
             <div>
               <h3 className="font-bold text-xl text-slate-900 mb-1">
-                CEM Eurofitness Vall d&apos;Hebron
+                {tr.location.venue}
               </h3>
               <p className="text-slate-500 mb-6">
-                Pg. de la Vall d&apos;Hebron 178, Horta-Guinardó, Barcelona 08035
+                {tr.location.address}
               </p>
 
               <ul className="space-y-2 text-slate-600 mb-8">
-                {[
-                  '🏐 Outdoor beach volleyball courts',
-                  '💡 Night lighting',
-                  '🚿 Changing rooms, showers and bar',
-                ].map((f) => (
+                {tr.location.features.map((f) => (
                   <li key={f} className="flex items-center gap-2">
                     <span>{f}</span>
                   </li>
                 ))}
               </ul>
 
-              <h4 className="font-bold text-slate-800 mb-3">How to get there</h4>
+              <h4 className="font-bold text-slate-800 mb-3">
+                {lang === 'es' ? 'Cómo llegar' : lang === 'ca' ? 'Com arribar-hi' : 'How to get there'}
+              </h4>
               <ul className="space-y-2 text-slate-600 text-sm">
-                <li>🚇 Metro L3 — Montbau (7 min walk)</li>
-                <li>🚇 Metro L5 — Vall d&apos;Hebron (8 min walk)</li>
-                <li>🚌 Bus 19, 27, 60, 76, H4, V17, V21</li>
-                <li>🚗 Car parking available nearby</li>
+                <li>🚇 {tr.location.transport.metro}</li>
+                <li>🚌 {tr.location.transport.bus}</li>
+                <li>🚗 {tr.location.transport.car}</li>
               </ul>
             </div>
 
@@ -421,10 +386,10 @@ export default function HomePage() {
               <div className="bg-gradient-to-br from-[#7C3AED]/10 via-[#F97316]/10 to-[#FFFBF0] h-56 flex flex-col items-center justify-center gap-3 border border-slate-200">
                 <span className="text-5xl">📍</span>
                 <span className="font-semibold text-slate-700 text-sm text-center px-4">
-                  Pg. de la Vall d&apos;Hebron 178, Barcelona
+                  {tr.location.address}
                 </span>
                 <span className="text-xs text-[#7C3AED] group-hover:underline">
-                  Open in Google Maps →
+                  {tr.location.mapCta} →
                 </span>
               </div>
             </a>
@@ -438,7 +403,7 @@ export default function HomePage() {
       <section id="community" className="bg-white py-16 md:py-24 px-4">
         <div className="mx-auto max-w-6xl">
           <h2 className="font-display text-4xl md:text-5xl uppercase text-center mb-4">
-            Our community
+            {tr.community.title}
           </h2>
           <div className="w-16 h-1 bg-[#F97316] mx-auto mb-10 rounded-full" />
 
@@ -460,20 +425,7 @@ export default function HomePage() {
 
           {/* Testimonials */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            {[
-              {
-                name: 'Marta R.',
-                text: 'I joined as a complete beginner and now I can actually play! The coaches are super patient and the group is so welcoming.',
-              },
-              {
-                name: 'Pau G.',
-                text: 'Best decision I made last year. Amazing training, great vibes, and I have made real friends here.',
-              },
-              {
-                name: 'Laura M.',
-                text: 'The energy at every session is incredible. You work hard but you\'re always smiling. Block N\' Roll is special.',
-              },
-            ].map(({ name, text }) => (
+            {tr.community.testimonials.map(({ name, text }) => (
               <div
                 key={name}
                 className="rounded-2xl bg-slate-50 border border-slate-100 shadow-sm hover:shadow-md transition-shadow p-6"
@@ -485,7 +437,7 @@ export default function HomePage() {
           </div>
 
           <p className="text-center text-xl font-semibold text-slate-700">
-            Come for the volleyball, stay for the community 🤘
+            {tr.community.tagline}
           </p>
         </div>
       </section>
@@ -496,22 +448,23 @@ export default function HomePage() {
       <section id="coaches" className="bg-[#FFFBF0] py-16 md:py-24 px-4">
         <div className="mx-auto max-w-6xl">
           <h2 className="font-display text-4xl md:text-5xl uppercase text-center mb-4">
-            Your coaches
+            {tr.coaches.title}
           </h2>
           <div className="w-16 h-1 bg-[#F97316] mx-auto mb-10 rounded-full" />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
-            {[
-              { name: 'Jesús García', initials: 'JG', from: 'from-[#7C3AED]', to: 'to-[#1E0A3C]' },
-              { name: 'David Bardina', initials: 'DB', from: 'from-[#F97316]', to: 'to-[#1E0A3C]' },
-            ].map(({ name, initials, from, to }) => (
+            {tr.coaches.coaches.map(({ name, initials }, idx) => (
               <div
                 key={name}
                 className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow p-8 text-center"
               >
                 {/* Avatar */}
                 <div
-                  className={`w-24 h-24 rounded-full bg-gradient-to-br ${from} ${to} flex items-center justify-center mx-auto mb-6 text-white text-2xl font-black`}
+                  className={`w-24 h-24 rounded-full bg-gradient-to-br flex items-center justify-center mx-auto mb-6 text-white text-2xl font-black ${
+                    idx === 0
+                      ? 'from-[#7C3AED] to-[#1E0A3C]'
+                      : 'from-[#F97316] to-[#1E0A3C]'
+                  }`}
                 >
                   {initials}
                 </div>
@@ -519,15 +472,11 @@ export default function HomePage() {
                 <h3 className="font-bold text-xl text-slate-900 mb-4">{name}</h3>
 
                 <ul className="space-y-2 text-sm text-slate-600 text-left max-w-xs mx-auto">
-                  <li className="flex items-center gap-2">
-                    <span>📜</span> Level 1 certified coach
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span>🎯</span> 6+ years competing and coaching
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span>🤘</span> Volleyball and rock lover
-                  </li>
+                  {tr.coaches.credentials.map((credential) => (
+                    <li key={credential} className="flex items-center gap-2">
+                      <span>{credential}</span>
+                    </li>
+                  ))}
                 </ul>
               </div>
             ))}
@@ -544,11 +493,10 @@ export default function HomePage() {
       >
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="font-display text-4xl md:text-5xl uppercase mb-4">
-            Ready to try your first session?
+            {tr.contact.title}
           </h2>
           <p className="text-white/60 mb-10 text-lg">
-            Fill in the form below or contact us directly — we&apos;ll find the perfect group for
-            you.
+            {tr.contact.subtitle}
           </p>
 
           {/* Contact form */}
@@ -561,20 +509,20 @@ export default function HomePage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
                 <label htmlFor="name" className="block text-sm font-semibold text-white/80 mb-1.5">
-                  Name *
+                  {tr.contact.form.name} *
                 </label>
                 <input
                   id="name"
                   name="name"
                   type="text"
                   required
-                  placeholder="Your name"
+                  placeholder={tr.contact.form.name}
                   className="w-full rounded-xl bg-white/10 border border-white/20 text-white placeholder:text-white/30 px-4 py-3 text-sm focus:outline-none focus:border-[#F97316] transition-colors"
                 />
               </div>
               <div>
                 <label htmlFor="email" className="block text-sm font-semibold text-white/80 mb-1.5">
-                  Email *
+                  {tr.contact.form.email} *
                 </label>
                 <input
                   id="email"
@@ -589,7 +537,7 @@ export default function HomePage() {
 
             <div>
               <label htmlFor="phone" className="block text-sm font-semibold text-white/80 mb-1.5">
-                Phone <span className="text-white/30 font-normal">(optional)</span>
+                {tr.contact.form.phone}
               </label>
               <input
                 id="phone"
@@ -602,13 +550,13 @@ export default function HomePage() {
 
             <div>
               <label htmlFor="message" className="block text-sm font-semibold text-white/80 mb-1.5">
-                Message
+                {tr.contact.form.message}
               </label>
               <textarea
                 id="message"
                 name="body"
                 rows={4}
-                placeholder="Tell us your level, availability, any questions..."
+                placeholder={tr.contact.form.messagePlaceholder}
                 className="w-full rounded-xl bg-white/10 border border-white/20 text-white placeholder:text-white/30 px-4 py-3 text-sm focus:outline-none focus:border-[#F97316] transition-colors resize-none"
               />
             </div>
@@ -618,7 +566,7 @@ export default function HomePage() {
               size="lg"
               className="w-full bg-[#F97316] hover:bg-[#ea6c0c] text-white font-bold py-6 rounded-xl shadow-lg shadow-[#F97316]/30"
             >
-              Send message
+              {tr.contact.form.submit}
             </Button>
           </form>
 
@@ -634,7 +582,7 @@ export default function HomePage() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                💬 Chat on WhatsApp
+                💬 {tr.contact.whatsapp}
               </a>
             </Button>
             <Button
@@ -643,20 +591,20 @@ export default function HomePage() {
               variant="outline"
               className="border-[#F97316] text-[#F97316] hover:bg-[#F97316] hover:text-white font-bold px-8 py-6 rounded-xl bg-transparent"
             >
-              <a href="mailto:blocknroll.bcnclub@gmail.com">✉️ Send us an email</a>
+              <a href="mailto:blocknroll.bcnclub@gmail.com">✉️ {tr.contact.emailCta}</a>
             </Button>
           </div>
 
           {/* Social */}
           <p className="text-white/50 text-sm">
-            Follow us on Instagram{' '}
+            {tr.contact.social}{' '}
             <a
               href="https://www.instagram.com/blocknrollbeachvolleybcn"
               target="_blank"
               rel="noopener noreferrer"
               className="text-[#7C3AED] font-semibold hover:text-[#9f6ef5] transition-colors"
             >
-              @blocknrollbeachvolleybcn
+              {tr.contact.handle}
             </a>
           </p>
         </div>
