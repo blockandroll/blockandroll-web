@@ -48,11 +48,9 @@ export function Header() {
     return () => subscription.unsubscribe()
   }, [])
 
-  const navLinks = [
-    { href: '/classes', label: 'Classes' },
-    { href: '/news', label: 'News' },
-    ...(user ? [{ href: '/resources', label: 'Resources' }] : []),
-  ]
+  const navLinks = user
+    ? [{ href: '/resources', label: 'Resources' }]
+    : []
 
   async function handleSignOut() {
     await supabase.auth.signOut()
