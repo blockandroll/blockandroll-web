@@ -67,8 +67,16 @@ export function Header() {
   return (
     <header className="border-b bg-[#0F0A1A] border-[#2D1060]">
       <div className="mx-auto max-w-6xl flex h-16 items-center justify-between px-4">
-        <Link href="/" className="font-bold text-xl tracking-tight text-white">
-          Block & Roll
+        <Link href="/" className="flex items-center gap-1 group">
+          <span className="font-display text-2xl uppercase tracking-wider text-white group-hover:text-orange-400 transition-colors">
+            Block
+          </span>
+          <span className="font-display text-2xl uppercase tracking-wider text-orange-500">
+            N&apos;
+          </span>
+          <span className="font-display text-2xl uppercase tracking-wider text-white group-hover:text-orange-400 transition-colors">
+            Roll
+          </span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-6">
@@ -76,7 +84,7 @@ export function Header() {
             <Link
               key={href}
               href={href}
-              className={`text-sm font-medium transition-colors ${
+              className={`font-display text-sm uppercase tracking-wider transition-colors ${
                 pathname.startsWith(href) ? 'text-orange-500' : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -91,7 +99,7 @@ export function Header() {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-9 w-9 rounded-full">
                   <Avatar className="h-9 w-9">
-                    <AvatarFallback>{initials}</AvatarFallback>
+                    <AvatarFallback className="bg-orange-500/20 text-orange-400 font-display">{initials}</AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
