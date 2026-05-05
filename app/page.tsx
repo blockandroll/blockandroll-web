@@ -13,15 +13,6 @@ export default async function HomePage({
   const lang: Lang = detectLang(headersList.get('accept-language'), params.lang)
   const tr = t(lang)
 
-  const navLinks = [
-    { label: tr.nav.about, href: '#about' },
-    { label: tr.nav.offer, href: '#offer' },
-    { label: tr.nav.schedules, href: '#schedules' },
-    { label: tr.nav.prices, href: '#prices' },
-    { label: tr.nav.location, href: '#location' },
-    { label: tr.nav.contact, href: '#contact' },
-  ]
-
   return (
     <div className="w-full">
 
@@ -48,37 +39,7 @@ export default async function HomePage({
           <div className="absolute -top-32 right-[14%] w-[1px] h-[140%] bg-[#F97316]/6 rotate-[20deg]" />
         </div>
 
-        {/* In-page anchor nav — hidden on mobile, horizontal on md+ */}
-        <nav className="hidden md:flex justify-center gap-6 mb-14">
-          {navLinks.map(({ label, href }) => (
-            <a
-              key={href}
-              href={href}
-              className="text-sm font-semibold tracking-widest uppercase text-white/60 hover:text-[#F97316] transition-colors"
-            >
-              {label}
-            </a>
-          ))}
-        </nav>
-
         <div className="relative mx-auto max-w-4xl text-center">
-          {/* Language switcher */}
-          <div className="flex items-center gap-2 justify-end mb-6">
-            {(['es', 'en', 'ca'] as const).map((l) => (
-              <a
-                key={l}
-                href={`/?lang=${l}`}
-                className={`px-3 py-1 rounded-full text-xs font-semibold uppercase transition-colors ${
-                  lang === l
-                    ? 'bg-orange-500 text-white'
-                    : 'bg-white/10 text-white/70 hover:bg-white/20 hover:text-white'
-                }`}
-              >
-                {l}
-              </a>
-            ))}
-          </div>
-
           {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-1.5 text-sm font-medium text-white/80 mb-8">
             <span>{tr.hero.badge}</span>
