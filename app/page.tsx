@@ -4,10 +4,10 @@ import { Button } from '@/components/ui/button'
 import { detectLang, t } from '@/lib/i18n'
 import type { Lang } from '@/lib/i18n'
 
-const TEAM_PHOTOS: Record<string, string> = {
-  Sara: '/team/sara.jpg',
-  Jesús: '/team/jesus.jpg',
-  David: '/team/david.jpg',
+const TEAM_PHOTOS: Record<string, { src: string; position: string }> = {
+  Sara:  { src: '/team/sara.jpg',  position: '65% 15%' },
+  Jesús: { src: '/team/jesus.jpg', position: 'center 8%' },
+  David: { src: '/team/david.jpg', position: 'center 12%' },
 }
 function teamPhoto(name: string) {
   return TEAM_PHOTOS[name.split(' ')[0]] ?? null
@@ -108,10 +108,11 @@ export default async function HomePage({
                   {photo ? (
                     <div className="relative h-64 w-full">
                       <Image
-                        src={photo}
+                        src={photo.src}
                         alt={name}
                         fill
-                        className="object-cover object-top"
+                        className="object-cover"
+                        style={{ objectPosition: photo.position }}
                         sizes="(max-width: 640px) 100vw, 33vw"
                       />
                     </div>
@@ -427,10 +428,11 @@ export default async function HomePage({
                   {photo ? (
                     <div className="relative w-32 h-32 rounded-full overflow-hidden mx-auto mb-6 ring-4 ring-[#F97316]/20">
                       <Image
-                        src={photo}
+                        src={photo.src}
                         alt={name}
                         fill
-                        className="object-cover object-top"
+                        className="object-cover"
+                        style={{ objectPosition: photo.position }}
                         sizes="128px"
                       />
                     </div>
