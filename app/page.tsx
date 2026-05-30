@@ -1,7 +1,17 @@
 import { headers } from 'next/headers'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { detectLang, t } from '@/lib/i18n'
 import type { Lang } from '@/lib/i18n'
+
+const TEAM_PHOTOS: Record<string, string> = {
+  Sara: '/team/sara.jpg',
+  Jesús: '/team/jesus.jpg',
+  David: '/team/david.jpg',
+}
+function teamPhoto(name: string) {
+  return TEAM_PHOTOS[name.split(' ')[0]] ?? null
+}
 
 export default async function HomePage({
   searchParams,
@@ -88,16 +98,33 @@ export default async function HomePage({
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            {tr.about.founders.map(({ name, role }) => (
-              <div
-                key={name}
-                className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow p-8 text-center"
-              >
-                <div className="text-5xl mb-4">🏐</div>
-                <h3 className="font-bold text-lg text-slate-900">{name}</h3>
-                <p className="text-sm text-slate-500 mt-1">{role}</p>
-              </div>
-            ))}
+            {tr.about.founders.map(({ name, role }) => {
+              const photo = teamPhoto(name)
+              return (
+                <div
+                  key={name}
+                  className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow overflow-hidden text-center"
+                >
+                  {photo ? (
+                    <div className="relative h-64 w-full">
+                      <Image
+                        src={photo}
+                        alt={name}
+                        fill
+                        className="object-cover object-top"
+                        sizes="(max-width: 640px) 100vw, 33vw"
+                      />
+                    </div>
+                  ) : (
+                    <div className="h-64 flex items-center justify-center text-5xl bg-slate-100">🏐</div>
+                  )}
+                  <div className="px-6 py-5">
+                    <h3 className="font-bold text-lg text-slate-900">{name}</h3>
+                    <p className="text-sm text-slate-500 mt-1">{role}</p>
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </div>
       </section>
@@ -196,33 +223,24 @@ export default async function HomePage({
           <div className="w-16 h-1 bg-[#F97316] mx-auto mb-10 rounded-full" />
 
           {/* Schedule grid */}
-          <div className="bg-white rounded-2xl shadow-sm overflow-hidden mb-6 max-w-2xl mx-auto">
-            <div className="grid grid-cols-6 text-center text-sm font-bold bg-[#1E0A3C] text-white">
-              {['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT–SUN'].map((d) => (
-                <div key={d} className="py-3 border-r border-white/10 last:border-0">
-                  {d}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 max-w-3xl mx-auto mb-8">
+            {tr.schedules.classes.map(({ day, slots }) => (
+              <div key={day} className="bg-white rounded-2xl shadow-sm p-5">
+                <h3 className="font-display text-base uppercase tracking-wide text-center text-[#1E0A3C] pb-3 mb-4 border-b border-slate-100">
+                  {day}
+                </h3>
+                <div className="space-y-3">
+                  {slots.map(({ time, groups }) => (
+                    <div key={time} className="border-l-2 border-[#F97316] pl-3">
+                      <div className="text-xs font-bold text-[#F97316] mb-0.5">{time}</div>
+                      {groups.map((g) => (
+                        <div key={g} className="text-xs text-slate-600">{g}</div>
+                      ))}
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-            <div className="grid grid-cols-6 text-center text-sm">
-              {[true, true, true, true, true, false].map((active, i) => (
-                <div
-                  key={i}
-                  className={`py-5 border-r border-slate-100 last:border-0 ${
-                    active ? 'text-slate-700 font-medium' : 'text-slate-300'
-                  }`}
-                >
-                  {active ? (
-                    <>
-                      <div className="font-bold text-[#F97316]">18:00</div>
-                      <div className="text-xs text-slate-400 mt-0.5">→ 22:30</div>
-                    </>
-                  ) : (
-                    '—'
-                  )}
-                </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
 
           <p className="text-center text-slate-500 mb-8">
@@ -362,44 +380,28 @@ export default async function HomePage({
           SECTION 9 — COMMUNITY
       ════════════════════════════════════════════════════════ */}
       <section id="community" className="bg-white py-16 md:py-24 px-4">
-        <div className="mx-auto max-w-6xl">
-          <h2 className="font-display text-4xl md:text-5xl uppercase text-center mb-4">
+        <div className="mx-auto max-w-2xl text-center">
+          <h2 className="font-display text-4xl md:text-5xl uppercase mb-4">
             {tr.community.title}
           </h2>
-          <div className="w-16 h-1 bg-[#F97316] mx-auto mb-10 rounded-full" />
-
-          {/* Photo placeholders */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-12">
-            {[
-              'from-[#F97316]/30 to-[#F97316]/10',
-              'from-[#FFFBF0] to-[#F97316]/20',
-              'from-[#7C3AED]/20 to-[#1E0A3C]/30',
-            ].map((gradient, i) => (
-              <div
-                key={i}
-                className={`rounded-2xl bg-gradient-to-br ${gradient} h-48 flex items-center justify-center text-5xl shadow-sm`}
-              >
-                🏐
-              </div>
-            ))}
-          </div>
-
-          {/* Testimonials */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            {tr.community.testimonials.map(({ name, text }) => (
-              <div
-                key={name}
-                className="rounded-2xl bg-slate-50 border border-slate-100 shadow-sm hover:shadow-md transition-shadow p-6"
-              >
-                <p className="text-slate-600 text-sm italic mb-4">&quot;{text}&quot;</p>
-                <p className="font-bold text-slate-900 text-sm">— {name}</p>
-              </div>
-            ))}
-          </div>
-
-          <p className="text-center text-xl font-semibold text-slate-700">
+          <div className="w-16 h-1 bg-[#F97316] mx-auto mb-8 rounded-full" />
+          <p className="text-lg text-slate-600 mb-10">
             {tr.community.tagline}
           </p>
+          <Button
+            asChild
+            size="lg"
+            className="bg-gradient-to-r from-[#E1306C] to-[#833AB4] hover:opacity-90 text-white font-bold px-10 py-6 rounded-xl shadow-lg"
+          >
+            <a
+              href="https://www.instagram.com/blocknrollbeachvolleybcn"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              📸 {tr.community.instagramCta}
+            </a>
+          </Button>
+          <p className="mt-6 text-slate-400 text-sm">{tr.community.handle}</p>
         </div>
       </section>
 
@@ -414,33 +416,42 @@ export default async function HomePage({
           <div className="w-16 h-1 bg-[#F97316] mx-auto mb-10 rounded-full" />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
-            {tr.coaches.coaches.map(({ name, initials }, idx) => (
-              <div
-                key={name}
-                className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow p-8 text-center"
-              >
-                {/* Avatar */}
+            {tr.coaches.coaches.map(({ name, initials }) => {
+              const photo = teamPhoto(name)
+              return (
                 <div
-                  className={`w-24 h-24 rounded-full bg-gradient-to-br flex items-center justify-center mx-auto mb-6 text-white text-2xl font-black ${
-                    idx === 0
-                      ? 'from-[#7C3AED] to-[#1E0A3C]'
-                      : 'from-[#F97316] to-[#1E0A3C]'
-                  }`}
+                  key={name}
+                  className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow p-8 text-center"
                 >
-                  {initials}
+                  {/* Avatar */}
+                  {photo ? (
+                    <div className="relative w-32 h-32 rounded-full overflow-hidden mx-auto mb-6 ring-4 ring-[#F97316]/20">
+                      <Image
+                        src={photo}
+                        alt={name}
+                        fill
+                        className="object-cover object-top"
+                        sizes="128px"
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-32 h-32 rounded-full bg-gradient-to-br from-[#7C3AED] to-[#1E0A3C] flex items-center justify-center mx-auto mb-6 text-white text-2xl font-black">
+                      {initials}
+                    </div>
+                  )}
+
+                  <h3 className="font-bold text-xl text-slate-900 mb-4">{name}</h3>
+
+                  <ul className="space-y-2 text-sm text-slate-600 text-left max-w-xs mx-auto">
+                    {tr.coaches.credentials.map((credential) => (
+                      <li key={credential} className="flex items-center gap-2">
+                        <span>{credential}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-
-                <h3 className="font-bold text-xl text-slate-900 mb-4">{name}</h3>
-
-                <ul className="space-y-2 text-sm text-slate-600 text-left max-w-xs mx-auto">
-                  {tr.coaches.credentials.map((credential) => (
-                    <li key={credential} className="flex items-center gap-2">
-                      <span>{credential}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       </section>

@@ -34,7 +34,7 @@ export const translations = {
       title: '¿Quiénes somos?',
       description: '¡Hola! Somos Sara, Jesús y David, apasionadxs del vóley playa y del rock 🤘. Tras años entrenando y compitiendo, hemos creado Block N\'Roll: un espacio donde aprender, mejorar, disfrutar y construir comunidad. Entrenamientos dinámicos, intensos y adaptados a cada persona, ¡en un ambiente cercano, divertido y lleno de arena!',
       founders: [
-        { name: 'Sara', role: 'Co-fundadora & Entrenadora' },
+        { name: 'Sara', role: 'Co-fundadora & Presidenta' },
         { name: 'Jesús', role: 'Co-fundador & Entrenador' },
         { name: 'David', role: 'Co-fundador & Entrenador' },
       ],
@@ -71,14 +71,35 @@ export const translations = {
     },
     schedules: {
       title: 'Horarios',
-      subtitle: 'Temporada 2025-2026',
-      days: 'Lunes a Viernes',
-      hours: '18:00 – 22:30',
       duration: 'Cada sesión: 90 minutos',
-      instagram: 'Horarios específicos publicados en Instagram',
+      instagram: 'Consulta Instagram para confirmar horarios',
       summerTitle: '⚠️ Entrenamiento de verano disponible',
-      summerText: 'Mayo – Julio 2025 con horarios limitados (mañana y tarde). Escríbenos si te interesa.',
+      summerText: 'Mayo – Julio 2026 con horarios limitados (mañana y tarde). Escríbenos si te interesa.',
       ctaButton: 'Preguntar por plazas disponibles',
+      classes: [
+        {
+          day: 'Lunes',
+          slots: [
+            { time: '19:30–21:00', groups: ['Masculino · Avanzado'] },
+          ],
+        },
+        {
+          day: 'Martes',
+          slots: [
+            { time: '18:00–19:30', groups: ['Femenino · Avanzado'] },
+            { time: '19:30–21:00', groups: ['Femenino · Intermedio'] },
+            { time: '21:00–22:30', groups: ['Femenino · Avanzado', 'Masculino · Intermedio'] },
+          ],
+        },
+        {
+          day: 'Jueves',
+          slots: [
+            { time: '18:00–19:30', groups: ['Mixto · Iniciación'] },
+            { time: '19:30–21:00', groups: ['Mixto · Avanzado Comp.'] },
+            { time: '21:00–22:30', groups: ['Mixto · Básico'] },
+          ],
+        },
+      ],
     },
     prices: {
       title: 'Precios',
@@ -103,12 +124,9 @@ export const translations = {
     },
     community: {
       title: 'Nuestra comunidad',
-      tagline: 'Ven por el vóley, quédate por la comunidad 🤘',
-      testimonials: [
-        { name: 'María G.', text: 'Los entrenamientos son súper dinámicos y los entrenadores te corrigen constantemente. ¡Ha mejorado mucho mi técnica!' },
-        { name: 'Carlos R.', text: 'Empecé sin saber nada de vóley playa y ahora compito en torneos amateur. El ambiente del club es increíble.' },
-        { name: 'Laura M.', text: 'Lo mejor es la mezcla de niveles y lo bien que te acogen desde el primer día. ¡Muy recomendable!' },
-      ],
+      tagline: 'Síguenos en Instagram para ver los últimos entrenamientos, horarios y noticias del club.',
+      instagramCta: 'Ver en Instagram',
+      handle: '@blocknrollbeachvolleybcn',
     },
     coaches: {
       title: 'Tus entrenadores',
@@ -157,7 +175,7 @@ export const translations = {
       title: 'Who are we?',
       description: 'Hi! We are Sara, Jesús and David, passionate about beach volleyball and rock 🤘. After years training and competing, we created Block N\'Roll: a space to learn, improve, enjoy and build a community. Dynamic, intensive training adapted to each person, in a welcoming, fun and sandy atmosphere!',
       founders: [
-        { name: 'Sara', role: 'Co-founder & Coach' },
+        { name: 'Sara', role: 'Co-founder & President' },
         { name: 'Jesús', role: 'Co-founder & Coach' },
         { name: 'David', role: 'Co-founder & Coach' },
       ],
@@ -194,14 +212,35 @@ export const translations = {
     },
     schedules: {
       title: 'Schedules',
-      subtitle: 'Season 2025-2026',
-      days: 'Monday to Friday',
-      hours: '18:00 – 22:30',
       duration: 'Each session: 90 minutes',
-      instagram: 'Specific times published on Instagram',
+      instagram: 'Check Instagram to confirm times',
       summerTitle: '⚠️ Summer training available',
-      summerText: 'May – July 2025 with limited morning and afternoon slots. Message us if you\'re interested.',
+      summerText: 'May – July 2026 with limited morning and afternoon slots. Message us if you\'re interested.',
       ctaButton: 'Ask about available spots',
+      classes: [
+        {
+          day: 'Monday',
+          slots: [
+            { time: '19:30–21:00', groups: ['Men\'s · Advanced'] },
+          ],
+        },
+        {
+          day: 'Tuesday',
+          slots: [
+            { time: '18:00–19:30', groups: ['Women\'s · Advanced'] },
+            { time: '19:30–21:00', groups: ['Women\'s · Intermediate'] },
+            { time: '21:00–22:30', groups: ['Women\'s · Advanced', 'Men\'s · Intermediate'] },
+          ],
+        },
+        {
+          day: 'Thursday',
+          slots: [
+            { time: '18:00–19:30', groups: ['Mixed · Beginner'] },
+            { time: '19:30–21:00', groups: ['Mixed · Advanced Comp.'] },
+            { time: '21:00–22:30', groups: ['Mixed · Basic'] },
+          ],
+        },
+      ],
     },
     prices: {
       title: 'Prices',
@@ -226,12 +265,9 @@ export const translations = {
     },
     community: {
       title: 'Our community',
-      tagline: 'Come for the volleyball, stay for the community 🤘',
-      testimonials: [
-        { name: 'María G.', text: 'The sessions are super dynamic and coaches correct you constantly. My technique has improved so much!' },
-        { name: 'Carlos R.', text: 'I started knowing nothing about beach volleyball and now I compete in amateur tournaments. The club atmosphere is incredible.' },
-        { name: 'Laura M.', text: 'The best thing is the mix of levels and how welcoming everyone is from day one. Highly recommended!' },
-      ],
+      tagline: 'Follow us on Instagram for the latest sessions, schedules, and club news.',
+      instagramCta: 'View on Instagram',
+      handle: '@blocknrollbeachvolleybcn',
     },
     coaches: {
       title: 'Your coaches',
@@ -280,7 +316,7 @@ export const translations = {
       title: 'Qui som?',
       description: 'Hola! Som la Sara, en Jesús i el David, apassionadxs del vòlei platja i del rock 🤘. Després d\'anys entrenant i competint, hem creat el Block N\'Roll: un espai per aprendre, millorar, gaudir i construir comunitat. Entrenaments dinàmics, intensos i adaptats a cada persona, en un ambient proper, divertit i ple de sorra!',
       founders: [
-        { name: 'Sara', role: 'Co-fundadora i Entrenadora' },
+        { name: 'Sara', role: 'Co-fundadora i Presidenta' },
         { name: 'Jesús', role: 'Co-fundador i Entrenador' },
         { name: 'David', role: 'Co-fundador i Entrenador' },
       ],
@@ -317,14 +353,35 @@ export const translations = {
     },
     schedules: {
       title: 'Horaris',
-      subtitle: 'Temporada 2025-2026',
-      days: 'Dilluns a divendres',
-      hours: '18:00 – 22:30',
       duration: 'Cada sessió: 90 minuts',
-      instagram: 'Horaris específics publicats a Instagram',
+      instagram: 'Consulta Instagram per confirmar horaris',
       summerTitle: '⚠️ Entrenament d\'estiu disponible',
-      summerText: 'Maig – Juliol 2025 amb horaris limitats (matí i tarda). Escriu-nos si t\'interessa.',
+      summerText: 'Maig – Juliol 2026 amb horaris limitats (matí i tarda). Escriu-nos si t\'interessa.',
       ctaButton: 'Preguntar per places disponibles',
+      classes: [
+        {
+          day: 'Dilluns',
+          slots: [
+            { time: '19:30–21:00', groups: ['Masculí · Avançat'] },
+          ],
+        },
+        {
+          day: 'Dimarts',
+          slots: [
+            { time: '18:00–19:30', groups: ['Femení · Avançat'] },
+            { time: '19:30–21:00', groups: ['Femení · Intermedi'] },
+            { time: '21:00–22:30', groups: ['Femení · Avançat', 'Masculí · Intermedi'] },
+          ],
+        },
+        {
+          day: 'Dijous',
+          slots: [
+            { time: '18:00–19:30', groups: ['Mixt · Iniciació'] },
+            { time: '19:30–21:00', groups: ['Mixt · Avançat Comp.'] },
+            { time: '21:00–22:30', groups: ['Mixt · Bàsic'] },
+          ],
+        },
+      ],
     },
     prices: {
       title: 'Preus',
@@ -349,12 +406,9 @@ export const translations = {
     },
     community: {
       title: 'La nostra comunitat',
-      tagline: 'Vine pel vòlei, queda\'t per la comunitat 🤘',
-      testimonials: [
-        { name: 'María G.', text: 'Els entrenaments són super dinàmics i els entrenadors et corregeixen constantment. Ha millorat molt la meva tècnica!' },
-        { name: 'Carlos R.', text: 'Vaig començar sense saber res de vòlei platja i ara competeeixo en tornejos amateur. L\'ambient del club és increïble.' },
-        { name: 'Laura M.', text: 'El millor és la barreja de nivells i com t\'acullen des del primer dia. Molt recomanable!' },
-      ],
+      tagline: 'Segueix-nos a Instagram per veure els últims entrenaments, horaris i notícies del club.',
+      instagramCta: 'Veure a Instagram',
+      handle: '@blocknrollbeachvolleybcn',
     },
     coaches: {
       title: 'Els teus entrenadors',
