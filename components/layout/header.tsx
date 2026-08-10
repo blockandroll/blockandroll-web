@@ -189,11 +189,7 @@ export function Header() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          ) : (
-            <Button asChild size="sm">
-              <Link href="/login">Log in</Link>
-            </Button>
-          )}
+          ) : null}
         </div>
 
       </div>
