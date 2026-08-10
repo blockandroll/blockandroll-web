@@ -1,7 +1,6 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Separator } from '@/components/ui/separator'
+import { requireRole } from '@/lib/supabase/require-role'
 
 const adminNav = [
   { href: '/admin', label: 'Overview' },
@@ -12,19 +11,7 @@ const adminNav = [
 ]
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single()
-
-  if (!profile || !['admin', 'coach'].includes(profile.role)) {
-    redirect('/dashboard')
-  }
+  await requireRole(['admin', 'coach'])
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">

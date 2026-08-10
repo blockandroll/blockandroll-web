@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import Link from 'next/link'
 import { revalidatePath } from 'next/cache'
+import { requireRole } from '@/lib/supabase/require-role'
 
 export default async function AdminPlayerDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -35,9 +36,9 @@ export default async function AdminPlayerDetailPage({ params }: { params: Promis
     'use server'
     const content = formData.get('content') as string
     if (!content?.trim()) return
+    // coach_notes_insert RLS policy requires coach_id = auth.uid() and role in ('admin', 'coach')
+    const { user } = await requireRole(['admin', 'coach'])
     const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return
     await supabase.from('coach_notes').insert({
       player_id: id,
       coach_id: user.id,

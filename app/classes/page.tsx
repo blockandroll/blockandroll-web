@@ -54,7 +54,7 @@ export default async function ClassesPage() {
                   {cls.capacity && <p>👥 Up to {cls.capacity} players</p>}
                 </div>
                 <Button asChild className="mt-2">
-                  <Link href="/login">Sign up for this class</Link>
+                  <Link href="/#contact">Contact us to join</Link>
                 </Button>
               </CardContent>
             </Card>

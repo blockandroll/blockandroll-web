@@ -10,13 +10,14 @@ export default async function DashboardPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const [{ data: profile }, { data: enrollments }, { data: news }] = await Promise.all([
+  const [{ data: profile }, { data: taughtClasses }, { data: news }] = await Promise.all([
     supabase.from('profiles').select('full_name, role').eq('id', user.id).single(),
     supabase
-      .from('enrollments')
-      .select('id, status, class:classes(id, title, level, location, starts_at)')
-      .eq('player_id', user.id)
+      .from('classes')
+      .select('id, title, level, location, starts_at')
+      .eq('instructor_id', user.id)
       .eq('status', 'active')
+      .order('starts_at', { ascending: true })
       .limit(5),
     supabase
       .from('news_posts')
@@ -35,43 +36,35 @@ export default async function DashboardPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-12">
       <h1 className="text-3xl font-bold mb-2">
-        Welcome back, {profile?.full_name ?? 'Player'}
+        Welcome back{profile?.full_name ? `, ${profile.full_name}` : ''}
       </h1>
-      <p className="text-muted-foreground mb-8">Here&apos;s your overview.</p>
+      <p className="text-muted-foreground mb-8">Here&apos;s your overview for running the club.</p>
 
       <div className="grid md:grid-cols-2 gap-8">
-        {/* My Classes */}
+        {/* Classes I Teach */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>My Classes</CardTitle>
+            <CardTitle>Classes I Teach</CardTitle>
             <Button asChild variant="ghost" size="sm">
               <Link href="/my-classes">View all</Link>
             </Button>
           </CardHeader>
           <CardContent>
-            {!enrollments || enrollments.length === 0 ? (
-              <div className="text-sm text-muted-foreground space-y-2">
-                <p>You&apos;re not enrolled in any classes yet.</p>
-                <Button asChild size="sm">
-                  <Link href="/classes">Browse classes</Link>
-                </Button>
-              </div>
+            {!taughtClasses || taughtClasses.length === 0 ? (
+              <p className="text-sm text-muted-foreground">
+                You don&apos;t have any classes assigned to teach yet.
+              </p>
             ) : (
               <ul className="space-y-3">
-                {enrollments.map((e) => {
-                  const cls = Array.isArray(e.class) ? e.class[0] : e.class
-                  if (!cls) return null
-                  const c = cls as { id: string; title: string; level: string; location: string | null }
-                  return (
-                    <li key={e.id} className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium">{c.title}</p>
-                        {c.location && <p className="text-xs text-muted-foreground">{c.location}</p>}
-                      </div>
-                      <Badge className={levelColors[c.level] ?? ''}>{c.level}</Badge>
-                    </li>
-                  )
-                })}
+                {taughtClasses.map((c) => (
+                  <li key={c.id} className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium">{c.title}</p>
+                      {c.location && <p className="text-xs text-muted-foreground">{c.location}</p>}
+                    </div>
+                    <Badge className={levelColors[c.level] ?? ''}>{c.level}</Badge>
+                  </li>
+                ))}
               </ul>
             )}
           </CardContent>

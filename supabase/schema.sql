@@ -110,6 +110,27 @@ alter table resources enable row level security;
 create policy "profiles_select" on profiles for select using (true);
 create policy "profiles_update" on profiles for update using (auth.uid() = id);
 
+-- Trigger: RLS alone can't restrict updates to specific columns, so block
+-- self-role-escalation (a player setting their own role to admin/coach)
+-- at the row level instead. Only an existing admin may change `role`.
+create or replace function prevent_role_self_escalation()
+returns trigger as $$
+begin
+  if new.role is distinct from old.role then
+    if not exists (
+      select 1 from profiles where id = auth.uid() and role = 'admin'
+    ) then
+      raise exception 'Only admins can change a user''s role';
+    end if;
+  end if;
+  return new;
+end;
+$$ language plpgsql security definer set search_path = public;
+
+create trigger enforce_role_immutability
+  before update on profiles
+  for each row execute procedure prevent_role_self_escalation();
+
 -- classes: anyone can read, coaches/admins manage
 create policy "classes_select" on classes for select using (true);
 create policy "classes_insert" on classes for insert with check (

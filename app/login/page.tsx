@@ -19,14 +19,18 @@ export default function LoginPage() {
             supabaseClient={supabase}
             appearance={{ theme: ThemeSupa }}
             providers={[]}
+            view="sign_in"
+            showLinks={false}
             redirectTo={`${typeof window !== 'undefined' ? window.location.origin : ''}/auth/callback`}
             localization={{
               variables: {
                 sign_in: { email_label: 'Email', password_label: 'Password', button_label: 'Sign in' },
-                sign_up: { email_label: 'Email', password_label: 'Password', button_label: 'Create account' },
               },
             }}
           />
+          <p className="mt-4 text-center text-sm text-slate-500">
+            Internal access only. Need an account? Ask a club admin to create one for you.
+          </p>
         </CardContent>
       </Card>
     </div>
