@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import Link from 'next/link'
 import { revalidatePath } from 'next/cache'
-import { requireRole } from '@/lib/supabase/require-role'
+import { requireRole, getProfile } from '@/lib/supabase/require-role'
 
 export default async function AdminPlayerDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -16,6 +16,13 @@ export default async function AdminPlayerDetailPage({ params }: { params: Promis
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
+
+  // Role changes are admin-only (matches the profiles_update trigger, which
+  // only allows an existing admin to change the role column) — only admins
+  // see the role control below, coaches don't.
+  const viewer = await getProfile()
+  const isAdmin = viewer?.role === 'admin'
+  const isSelf = user.id === id
 
   const [{ data: player }, { data: notes }, { data: enrollments }] = await Promise.all([
     supabase.from('profiles').select('id, full_name, role, phone, bio, created_at').eq('id', id).single(),
@@ -44,6 +51,19 @@ export default async function AdminPlayerDetailPage({ params }: { params: Promis
       coach_id: user.id,
       content: content.trim(),
     })
+    revalidatePath(`/admin/players/${id}`)
+  }
+
+  async function updateRole(formData: FormData) {
+    'use server'
+    const role = formData.get('role') as string
+    if (!['admin', 'coach', 'player'].includes(role)) return
+    // requireRole enforces this server-side too — the trigger on profiles
+    // would reject the update anyway if the actor isn't an admin, this just
+    // fails earlier with a clearer redirect instead of a raised exception.
+    await requireRole(['admin'])
+    const supabase = await createClient()
+    await supabase.from('profiles').update({ role }).eq('id', id)
     revalidatePath(`/admin/players/${id}`)
   }
 
@@ -100,6 +120,37 @@ export default async function AdminPlayerDetailPage({ params }: { params: Promis
           </CardContent>
         </Card>
       </div>
+
+      {isAdmin && (
+        <Card className="mt-6">
+          <CardHeader><CardTitle className="text-base">Role</CardTitle></CardHeader>
+          <CardContent>
+            <form action={updateRole} className="flex items-end gap-3">
+              <div className="space-y-2">
+                <Label htmlFor="role">Role</Label>
+                <select
+                  name="role"
+                  id="role"
+                  defaultValue={player.role}
+                  disabled={isSelf}
+                  required
+                  className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm"
+                >
+                  <option value="player">Player</option>
+                  <option value="coach">Coach</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
+              <Button type="submit" size="sm" disabled={isSelf}>Save role</Button>
+            </form>
+            {isSelf && (
+              <p className="text-xs text-muted-foreground mt-2">
+                You can&apos;t change your own role here — ask another admin, or use the Supabase SQL editor.
+              </p>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       <Separator className="my-8" />
 
