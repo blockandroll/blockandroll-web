@@ -2,7 +2,7 @@
 
 import { Suspense } from 'react'
 import Link from 'next/link'
-import { usePathname, useSearchParams } from 'next/navigation'
+import { usePathname, useSearchParams, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
@@ -89,10 +89,21 @@ function LangSwitcher() {
 
 export function Header() {
   const supabase = createClient()
+  const router = useRouter()
   const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
 
   useEffect(() => {
+    // Supabase's own hosted /auth/v1/verify redirect (used by the dashboard's
+    // "reset password" / invite actions) lands the session in a #access_token
+    // hash fragment on whatever `redirect_to` is configured — often just the
+    // site root, not our /auth/callback route — so it can land on any page.
+    // Catch it here since Header mounts everywhere, before supabase-js
+    // finishes parsing/clearing the hash.
+    if (typeof window !== 'undefined' && /type=(recovery|invite)/.test(window.location.hash)) {
+      router.replace('/auth/set-password')
+    }
+
     supabase.auth.getUser().then(({ data: { user } }) => {
       setUser(user)
       if (user) {
@@ -107,9 +118,13 @@ export function Header() {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null)
       if (!session?.user) setProfile(null)
+      // Fallback in case the hash was already cleared before the check above ran.
+      if (event === 'PASSWORD_RECOVERY') {
+        router.replace('/auth/set-password')
+      }
     })
     return () => subscription.unsubscribe()
   }, [])
