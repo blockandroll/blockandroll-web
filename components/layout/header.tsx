@@ -100,8 +100,17 @@ export function Header() {
     // site root, not our /auth/callback route — so it can land on any page.
     // Catch it here since Header mounts everywhere, before supabase-js
     // finishes parsing/clearing the hash.
-    if (typeof window !== 'undefined' && /type=(recovery|invite)/.test(window.location.hash)) {
-      router.replace('/auth/set-password')
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash
+      if (/type=(recovery|invite)/.test(hash)) {
+        router.replace('/auth/set-password')
+      } else if (/error=/.test(hash)) {
+        // Expired/already-used links redirect with #error=...&error_description=...
+        // instead — surface that instead of silently landing on the homepage.
+        const params = new URLSearchParams(hash.slice(1))
+        const description = params.get('error_description') ?? 'This link is invalid or has expired.'
+        router.replace(`/auth/set-password?error=${encodeURIComponent(description)}`)
+      }
     }
 
     supabase.auth.getUser().then(({ data: { user } }) => {
