@@ -1,14 +1,15 @@
 import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+import { requireRole } from '@/lib/supabase/require-role'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 
 export default async function DashboardPage() {
+  // The portal is admin/coach only for now — no player self-service exists,
+  // so anyone else gets sent to the public site instead of an empty portal.
+  const { user } = await requireRole(['admin', 'coach'])
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
 
   const [{ data: profile }, { data: taughtClasses }, { data: news }] = await Promise.all([
     supabase.from('profiles').select('full_name, role').eq('id', user.id).single(),

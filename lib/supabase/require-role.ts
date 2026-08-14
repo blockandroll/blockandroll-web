@@ -18,7 +18,9 @@ export async function requireRole(allowedRoles: Role[]) {
     .single()
 
   if (!profile || !allowedRoles.includes(profile.role as Role)) {
-    redirect('/dashboard')
+    // The entire portal is admin/coach-only for now, so there's no other
+    // internal page to fall back to — send anyone else to the public site.
+    redirect('/')
   }
 
   return { user, role: profile.role as Role }

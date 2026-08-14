@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+import { requireRole } from '@/lib/supabase/require-role'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -9,9 +9,9 @@ import { Badge } from '@/components/ui/badge'
 import { revalidatePath } from 'next/cache'
 
 export default async function ProfilePage() {
+  // Portal is admin/coach only for now — see dashboard/page.tsx.
+  const { user } = await requireRole(['admin', 'coach'])
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
 
   const { data: profile } = await supabase
     .from('profiles')

@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+import { requireRole } from '@/lib/supabase/require-role'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 
@@ -52,9 +52,9 @@ function ResourceCard({ resource }: { resource: Resource }) {
 }
 
 export default async function ResourcesPage() {
+  // Portal is admin/coach only for now — see dashboard/page.tsx.
+  await requireRole(['admin', 'coach'])
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
 
   const { data: resources } = await supabase
     .from('resources')
@@ -66,7 +66,7 @@ export default async function ResourcesPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-12">
       <h1 className="text-3xl font-bold mb-2">Resources</h1>
-      <p className="text-muted-foreground mb-8">Guides, videos, and materials to improve your game.</p>
+      <p className="text-muted-foreground mb-8">Training materials and references for coaches to plan sessions with.</p>
 
       {!resources || resources.length === 0 ? (
         <p className="text-muted-foreground">No resources available yet. Check back soon!</p>

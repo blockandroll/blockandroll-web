@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import { requireRole } from '@/lib/supabase/require-role'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 
@@ -23,19 +24,13 @@ type TaughtClass = {
 }
 
 export default async function MyClassesPage() {
+  // Portal is admin/coach only for now — see dashboard/page.tsx.
+  const { user, role } = await requireRole(['admin', 'coach'])
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('full_name, role')
-    .eq('id', user.id)
-    .single()
 
   // Admins manage the full roster of classes from the admin panel — send them there
   // instead of a personal "classes I teach" view that would be empty for most admins.
-  if (profile?.role === 'admin') {
+  if (role === 'admin') {
     redirect('/admin/classes')
   }
 
