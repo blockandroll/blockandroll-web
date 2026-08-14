@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { Auth } from '@supabase/auth-ui-react'
 import { ThemeSupa } from '@supabase/auth-ui-shared'
 import { createClient } from '@/lib/supabase/client'
@@ -7,6 +9,23 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 export default function LoginPage() {
   const supabase = createClient()
+  const router = useRouter()
+
+  useEffect(() => {
+    // A successful email/password sign-in just resolves a promise client-side
+    // — it doesn't navigate anywhere on its own. Without this, the form sits
+    // on /login looking like it did nothing until something else (e.g. a
+    // manual refresh) makes proxy.ts notice the new session cookie.
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_IN') {
+        router.replace('/dashboard')
+        router.refresh()
+      }
+    })
+    return () => subscription.unsubscribe()
+  }, [])
 
   return (
     <div className="flex min-h-[calc(100vh-8rem)] items-center justify-center px-4">
