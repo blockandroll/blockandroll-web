@@ -1,8 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, Anton } from 'next/font/google'
 import './globals.css'
-import { Header } from '@/components/layout/header'
-import { Footer } from '@/components/layout/footer'
+import { RecoveryLinkWatcher } from '@/components/auth/recovery-link-watcher'
 
 const inter = Inter({ subsets: ['latin'] })
 const anton = Anton({
@@ -16,6 +15,9 @@ export const metadata: Metadata = {
   description: 'Beach volleyball classes for all levels in Barcelona.',
 }
 
+// Shared shell only — the marketing site and the admin/coach portal each
+// define their own header/footer in their own route group layout, so that
+// being logged into the portal never shows up on the public site.
 export default function RootLayout({
   children,
 }: {
@@ -24,9 +26,8 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body className={`${inter.className} ${anton.variable} min-h-screen flex flex-col bg-slate-50`}>
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <RecoveryLinkWatcher />
+        {children}
       </body>
     </html>
   )
